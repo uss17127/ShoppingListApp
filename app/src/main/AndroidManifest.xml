@@ -23,10 +23,23 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".RegisterActivity"
+            android:parentActivityName=".MainActivity">
 
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.uga.cs.shoppinglistapp.MainActivity" />
+        </activity>
+        <activity
+            android:name=".AddItem"
+            android:parentActivityName=".MainActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.uga.cs.shoppinglistapp.MainActivity" />
         </activity>
     </application>
 

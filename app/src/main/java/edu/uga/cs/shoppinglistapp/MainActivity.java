@@ -39,11 +39,19 @@ public class MainActivity extends AppCompatActivity {
         Button signInButton = findViewById( R.id.button1 );
         Button registerButton = findViewById( R.id.button2 );
 
+        registerButton.setOnClickListener( new RegisterButtonClickListener() );
 
     }
 
 
-
+    private class RegisterButtonClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            // start the user registration activity
+            Intent intent = new Intent(view.getContext(), RegisterActivity.class);
+            view.getContext().startActivity(intent);
+        }
+    }
 
 
 
