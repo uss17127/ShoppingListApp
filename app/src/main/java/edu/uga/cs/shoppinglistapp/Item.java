@@ -15,11 +15,11 @@ public class Item {
     }
 
 
-    public Item(String itemName, int itemAmount, double itemPrice) {
+    public Item(String itemName, int itemAmount) {
         this.id = -1;
         this.name = itemName;
         this.amount = itemAmount;
-        this.price = itemPrice;
+        this.price = -1;
     }
 
     public long getId()
