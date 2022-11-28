@@ -29,12 +29,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        AppCompatDelegate.setDefaultNightMode( AppCompatDelegate.MODE_NIGHT_YES );
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.d( DEBUG_TAG, "JobLead: MainActivity.onCreate()" );
+        Log.d( DEBUG_TAG, "ShoppingListApp: MainActivity.onCreate()" );
 
         Button signInButton = findViewById( R.id.button1 );
         Button registerButton = findViewById( R.id.button2 );

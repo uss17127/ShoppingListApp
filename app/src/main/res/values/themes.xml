@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.ShoppingListApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.ShoppingListApp" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimaryVariant">@color/purple_500</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -28,23 +28,23 @@
         <!-- Background color of the login dialog -->
         <item name="android:windowBackground">@color/white</item>
 
-        <item name="colorControlNormal">@color/green</item>
+        <item name="colorControlNormal">@color/purple_500</item>
 
-        <item name="android:textColorHint">@color/green</item>
+        <item name="android:textColorHint">@color/purple_500</item>
 
         <!-- Underline and Hint of the edittext -->
-        <item name="colorControlActivated">@color/green_dark</item>
+        <item name="colorControlActivated">@color/purple_700</item>
 
         <!-- Top bar color of the login dialog -->
-        <item name="colorPrimary">@color/green</item>
-        <item name="colorPrimaryDark">@color/green_dark</item>
+        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimaryDark">@color/purple_700</item>
 
         <!-- Typed in text color into the edittext -->
-        <item name="android:textColorPrimary">@color/green_dark</item>
+        <item name="android:textColorPrimary">@color/purple_700</item>
 
-        <item name="android:textColor">@color/green_dark</item>
+        <item name="android:textColor">@color/purple_700</item>
 
-        <item name="android:textColorLink">@color/green_dark</item>
+        <item name="android:textColorLink">@color/purple_700</item>
 
         <!-- Remove the action bar from the login dialog -->
         <item name="windowActionBar">false</item>
@@ -61,12 +61,12 @@
     <!-- Custom styling of the email TextInputLayout view in the Firebase sign-in screen -->
     <style name="FirebaseUI.TextInputLayout.EmailField">
         <item name="android:hint">@string/fui_email_hint</item>
-        <item name="android:textColorHint">@color/green</item>
+        <item name="android:textColorHint">@color/purple_500</item>
     </style>
 
     <!-- Custom styling of the password TextInputLayout view in the Firebase sign-in screen -->
     <style name="FirebaseUI.TextInputLayout.PasswordField">
         <item name="android:hint">@string/fui_password_hint</item>
-        <item name="android:textColorHint">@color/green</item>
+        <item name="android:textColorHint">@color/purple_500</item>
     </style>
 </resources>
