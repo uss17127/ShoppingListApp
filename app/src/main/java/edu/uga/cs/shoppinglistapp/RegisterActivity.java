@@ -66,7 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 FirebaseUser user = firebaseAuth.getCurrentUser();
 
-                                Intent intent = new Intent( RegisterActivity.this, AddItem.class );
+                                Intent intent = new Intent( RegisterActivity.this, ListManagement.class );
                                 startActivity( intent );
 
                             } else {

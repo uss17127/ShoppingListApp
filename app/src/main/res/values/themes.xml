@@ -13,4 +13,60 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <!-- Custom styling of the FirebaseUI -->
+    <!-- The complete list of FirebaseUI styles is available at:
+         github.com/firebase/FirebaseUI-Android/blob/master/auth/src/main/res/values/styles.xml
+         However, you will likely need to look at various UI screens to know which styles are in
+         use for which UI views.  For example, the FirebaseUI.TextInputLayout.EmailField style is applied
+         to the email entry's TextInputLayout view, in case you want to taylor the email's appearance, as it is being input.
+         You may examine the layout use in Firebase's login windows here:
+         github.com/firebase/FirebaseUI-Android/blob/master/auth/src/main/res/layout/fui_check_email_layout.xml
+    -->
+    <style name="LoginTheme" parent="FirebaseUI">
+
+        <!-- Background color of the login dialog -->
+        <item name="android:windowBackground">@color/white</item>
+
+        <item name="colorControlNormal">@color/green</item>
+
+        <item name="android:textColorHint">@color/green</item>
+
+        <!-- Underline and Hint of the edittext -->
+        <item name="colorControlActivated">@color/green_dark</item>
+
+        <!-- Top bar color of the login dialog -->
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorPrimaryDark">@color/green_dark</item>
+
+        <!-- Typed in text color into the edittext -->
+        <item name="android:textColorPrimary">@color/green_dark</item>
+
+        <item name="android:textColor">@color/green_dark</item>
+
+        <item name="android:textColorLink">@color/green_dark</item>
+
+        <!-- Remove the action bar from the login dialog -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+    </style>
+
+    <!-- Custom styling of the Trouble signing in link -->
+    <style name="FirebaseUI.Text.Link">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/maroon</item>
+    </style>
+
+    <!-- Custom styling of the email TextInputLayout view in the Firebase sign-in screen -->
+    <style name="FirebaseUI.TextInputLayout.EmailField">
+        <item name="android:hint">@string/fui_email_hint</item>
+        <item name="android:textColorHint">@color/green</item>
+    </style>
+
+    <!-- Custom styling of the password TextInputLayout view in the Firebase sign-in screen -->
+    <style name="FirebaseUI.TextInputLayout.PasswordField">
+        <item name="android:hint">@string/fui_password_hint</item>
+        <item name="android:textColorHint">@color/green</item>
+    </style>
 </resources>
