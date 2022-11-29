@@ -9,14 +9,12 @@ public class Item {
     public Item () {
         this.name = null;
         this.amount = -1;
-        this.price = -1;
     }
 
 
     public Item(String itemName, int itemAmount) {
         this.name = itemName;
         this.amount = itemAmount;
-        this.price = -1;
     }
 
     public String getName() {return name;}
