@@ -2,13 +2,11 @@ package edu.uga.cs.shoppinglistapp;
 
 /** POJO or single object for single shopping item */
 public class Item {
-    private long id;
     private String name;
     private int amount;
     private double price;
 
     public Item () {
-        this.id = -1;
         this.name = null;
         this.amount = -1;
         this.price = -1;
@@ -16,20 +14,9 @@ public class Item {
 
 
     public Item(String itemName, int itemAmount) {
-        this.id = -1;
         this.name = itemName;
         this.amount = itemAmount;
         this.price = -1;
-    }
-
-    public long getId()
-    {
-        return id;
-    }
-
-    public void setId(long id)
-    {
-        this.id = id;
     }
 
     public String getName() {return name;}
