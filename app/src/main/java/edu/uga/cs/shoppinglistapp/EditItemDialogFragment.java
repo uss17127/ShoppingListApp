@@ -101,4 +101,37 @@ public class EditItemDialogFragment extends DialogFragment {
 
     }
 
+    private class SaveButtonClickListener implements DialogInterface.OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            String itemName = getArguments().getString("name");
+            int amount = getArguments().getInt("amount");
+            double price = getArguments().getDouble("price");
+            Item item = new Item(itemName, amount, price);
+            item.setKey(key);
+
+            // get the Activity's listener to add the new job lead
+            EditItemDialogListener listener = (EditItemDialogFragment.EditItemDialogListener) getActivity();
+            // add the new job lead
+            listener.updateItem( position, item, SAVE );
+
+            // close the dialog
+            dismiss();
+        }
+    }
+
+    private class DeleteButtonClickListener implements DialogInterface.OnClickListener {
+        @Override
+        public void onClick( DialogInterface dialog, int which ) {
+
+            Item item = new Item(itemName, amount, price);
+            item.setKey( key );
+
+            // get the Activity's listener to add the new job lead
+            EditItemDialogFragment.EditItemDialogListener listener = (EditItemDialogFragment.EditItemDialogListener) getActivity();            // add the new job lead
+            listener.updateItem( position, item, DELETE );
+            // close the dialog
+            dismiss();
+        }
+
 }
