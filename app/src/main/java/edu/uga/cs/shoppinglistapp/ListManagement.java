@@ -15,8 +15,11 @@ public class ListManagement extends AppCompatActivity {
         setContentView(R.layout.activity_list_management);
 
         Button addItem = findViewById( R.id.button4);
+        Button viewList = findViewById(R.id.button5);
 
         addItem.setOnClickListener(new addItemButtonClickListener());
+        viewList.setOnClickListener(new viewListButtonClickListener());
+
     }
 
     private class addItemButtonClickListener implements View.OnClickListener {
@@ -24,6 +27,15 @@ public class ListManagement extends AppCompatActivity {
         public void onClick(View view) {
             // start the user registration activity
             Intent intent = new Intent(view.getContext(), AddItem.class);
+            view.getContext().startActivity(intent);
+        }
+    }
+
+    private class viewListButtonClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            // start the user registration activity
+            Intent intent = new Intent(view.getContext(), ReviewItemsActivity.class);
             view.getContext().startActivity(intent);
         }
     }

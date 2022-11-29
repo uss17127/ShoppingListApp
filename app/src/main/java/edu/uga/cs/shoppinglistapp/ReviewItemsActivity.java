@@ -30,8 +30,8 @@ import java.util.List;
  * The current job leads are listed as a RecyclerView.
  */
 public class ReviewItemsActivity
-        extends AppCompatActivity,
-        EditItemDialogFragment.EditItemDialogListener {
+        extends AppCompatActivity
+        implements EditItemDialogFragment.EditItemDialogListener {
 
     public static final String DEBUG_TAG = "ReviewJobLeadsActivity";
 
@@ -190,7 +190,7 @@ public class ReviewItemsActivity
             Log.d( DEBUG_TAG, "Deleting job lead at: " + position + "(" + item.getName() + ")" );
 
             // remove the deleted job lead from the list (internal list in the App)
-            item.remove( position );
+            itemsList.remove( position );
 
             // Update the recycler view to remove the deleted job lead from that view
             recyclerAdapter.notifyItemRemoved( position );

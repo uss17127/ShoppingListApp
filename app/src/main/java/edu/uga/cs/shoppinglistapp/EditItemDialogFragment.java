@@ -43,8 +43,8 @@ public class EditItemDialogFragment extends DialogFragment {
 
         // Supply job lead values as an argument.
         Bundle args = new Bundle();
-        args.putString( "key", key );
-        args.putInt( "position", position );
+        args.putString("key", key);
+        args.putInt("position", position);
         args.putString("name", itemName);
         args.putInt("amount", amount);
         args.putDouble("price", price);
@@ -63,9 +63,9 @@ public class EditItemDialogFragment extends DialogFragment {
         price = getArguments().getDouble("price");
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View layout = inflater.inflate( R.layout.item_dialogue, getActivity().findViewById( R.id.root ) );
+        final View layout = inflater.inflate(R.layout.item_dialogue, getActivity().findViewById(R.id.root));
 
-        itemNameView =  layout.findViewById(R.id.editText1);
+        itemNameView = layout.findViewById(R.id.editText1);
         itemAmountView = layout.findViewById(R.id.editText2);
         itemPriceView = layout.findViewById(R.id.editText3);
 
@@ -75,14 +75,14 @@ public class EditItemDialogFragment extends DialogFragment {
         itemAmountView.setText(amount);
         itemPriceView.setText(Double.toString(price));
 
-        AlertDialog.Builder builder = new AlertDialog.Builder( getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(layout);
 
         // Set the title of the AlertDialog
-        builder.setTitle( "Item" );
+        builder.setTitle("Item");
 
         // The Cancel button handler
-        builder.setNegativeButton( android.R.string.cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 // close the dialog
@@ -91,10 +91,10 @@ public class EditItemDialogFragment extends DialogFragment {
         });
 
         // The Save button handler
-        builder.setPositiveButton( "SAVE", new SaveButtonClickListener() );
+        builder.setPositiveButton("SAVE", new SaveButtonClickListener());
 
         // The Delete button handler
-        builder.setNeutralButton( "DELETE", new DeleteButtonClickListener() );
+        builder.setNeutralButton("DELETE", new DeleteButtonClickListener());
 
         // Create the AlertDialog and show it
         return builder.create();
@@ -113,7 +113,7 @@ public class EditItemDialogFragment extends DialogFragment {
             // get the Activity's listener to add the new job lead
             EditItemDialogListener listener = (EditItemDialogFragment.EditItemDialogListener) getActivity();
             // add the new job lead
-            listener.updateItem( position, item, SAVE );
+            listener.updateItem(position, item, SAVE);
 
             // close the dialog
             dismiss();
@@ -122,16 +122,17 @@ public class EditItemDialogFragment extends DialogFragment {
 
     private class DeleteButtonClickListener implements DialogInterface.OnClickListener {
         @Override
-        public void onClick( DialogInterface dialog, int which ) {
+        public void onClick(DialogInterface dialog, int which) {
 
             Item item = new Item(itemName, amount, price);
-            item.setKey( key );
+            item.setKey(key);
 
             // get the Activity's listener to add the new job lead
             EditItemDialogFragment.EditItemDialogListener listener = (EditItemDialogFragment.EditItemDialogListener) getActivity();            // add the new job lead
-            listener.updateItem( position, item, DELETE );
+            listener.updateItem(position, item, DELETE);
             // close the dialog
             dismiss();
         }
 
+    }
 }
