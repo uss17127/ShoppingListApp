@@ -37,7 +37,7 @@ public class AddItem extends AppCompatActivity {
         public void onClick(View v) {
             String itemName = itemNameEditText.getText().toString();
             int itemAmount = Integer.parseInt(itemAmountEditText.getText().toString());
-            final Item item = new Item(itemName, itemAmount);
+            final Item item = new Item(itemName, itemAmount, 0);
 
             // Add a new element (JobLead) to the list of job leads in Firebase.
             FirebaseDatabase database = FirebaseDatabase.getInstance();
