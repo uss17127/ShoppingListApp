@@ -75,7 +75,7 @@ public class EditItemDialogFragment extends DialogFragment {
         itemAmountView.setText(amount);
         itemPriceView.setText(Double.toString(price));
 
-        AlertDialog.Builder builder = new AlertDialog.Builder( getActivity(), R.style.AlertDialogStyle );
+        AlertDialog.Builder builder = new AlertDialog.Builder( getActivity());
         builder.setView(layout);
 
         // Set the title of the AlertDialog
@@ -91,10 +91,10 @@ public class EditItemDialogFragment extends DialogFragment {
         });
 
         // The Save button handler
-        //builder.setPositiveButton( "SAVE", new SaveButtonClickListener() );
+        builder.setPositiveButton( "SAVE", new SaveButtonClickListener() );
 
         // The Delete button handler
-        //builder.setNeutralButton( "DELETE", new DeleteButtonClickListener() );
+        builder.setNeutralButton( "DELETE", new DeleteButtonClickListener() );
 
         // Create the AlertDialog and show it
         return builder.create();

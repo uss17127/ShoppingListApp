@@ -2,20 +2,31 @@ package edu.uga.cs.shoppinglistapp;
 
 /** POJO or single object for single shopping item */
 public class Item {
+    private String key;
     private String name;
     private int amount;
     private double price;
 
     public Item () {
+        this.key = null;
         this.name = null;
         this.amount = -1;
     }
 
 
     public Item(String itemName, int itemAmount, double itemPrice) {
+        this.key = null;
         this.name = itemName;
         this.amount = itemAmount;
         this.price = itemPrice;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getName() {return name;}
