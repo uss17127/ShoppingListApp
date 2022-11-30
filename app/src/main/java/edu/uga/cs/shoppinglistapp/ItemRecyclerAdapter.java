@@ -66,7 +66,7 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
 
 
         holder.itemName.setText( item.getName());
-        holder.itemAmount.setText( item.getAmount() );
+        holder.itemAmount.setText( Integer.toString(item.getAmount()));
         holder.itemPrice.setText( Double.toString(item.getPrice()) );
 
         // We can attach an OnClickListener to the itemView of the holder;
@@ -80,9 +80,9 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
             public void onClick(View v) {
                 //Log.d( TAG, "onBindViewHolder: getItemId: " + holder.getItemId() );
                 //Log.d( TAG, "onBindViewHolder: getAdapterPosition: " + holder.getAdapterPosition() );
-                EditItemDialogFragment editJobFragment =
+                EditItemDialogFragment editItemFragment =
                         EditItemDialogFragment.newInstance( holder.getAdapterPosition(), key, itemName, itemAmount, itemPrice);
-                editJobFragment.show( ((AppCompatActivity)context).getSupportFragmentManager(), null);
+                editItemFragment.show( ((AppCompatActivity)context).getSupportFragmentManager(), null);
             }
         });
     }

@@ -7,10 +7,21 @@
     android:orientation="vertical"
     tools:context=".ListManagement">
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="serif"
+        android:text="Welcome"
+        android:textColor="#000000"
+        android:textSize="20dp" />
+
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="match_parent"
-        android:layout_height="405dp"
+        android:layout_height="389dp"
         app:srcCompat="@drawable/itemscollage" />
 
     <Button
