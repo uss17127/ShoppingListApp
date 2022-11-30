@@ -99,52 +99,7 @@ public class ReviewItemsActivity
         } );
     }
 
-    // this is our own callback for a AddJobLeadDialogFragment which adds a new job lead.
-    public void addJobLead(Item item) {
-        // add the new job lead
-        // Add a new element (JobLead) to the list of job leads in Firebase.
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("itemsneededlist");
 
-        // First, a call to push() appends a new node to the existing list (one is created
-        // if this is done for the first time).  Then, we set the value in the newly created
-        // list node to store the new job lead.
-        // This listener will be invoked asynchronously, as no need for an AsyncTask, as in
-        // the previous apps to maintain job leads.
-        myRef.push().setValue( item )
-                .addOnSuccessListener( new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-
-                        // Reposition the RecyclerView to show the JobLead most recently added (as the last item on the list).
-                        // Use of the post method is needed to wait until the RecyclerView is rendered, and only then
-                        // reposition the item into view (show the last item on the list).
-                        // the post method adds the argument (Runnable) to the message queue to be executed
-                        // by Android on the main UI thread.  It will be done *after* the setAdapter call
-                        // updates the list items, so the repositioning to the last item will take place
-                        // on the complete list of items.
-                        recyclerView.post( new Runnable() {
-                            @Override
-                            public void run() {
-                                recyclerView.smoothScrollToPosition( itemsList.size()-1 );
-                            }
-                        } );
-
-                        Log.d( DEBUG_TAG, "Item saved: " + item );
-                        // Show a quick confirmation
-                        Toast.makeText(getApplicationContext(), "Item created for " + item.getName(),
-                                Toast.LENGTH_SHORT).show();
-
-                    }
-                })
-                .addOnFailureListener( new OnFailureListener() {
-                    @Override
-                    public void onFailure( @NonNull Exception e ) {
-                        Toast.makeText( getApplicationContext(), "Failed to create an item for " + item.getName(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
 
     // This is our own callback for a DialogFragment which edits an existing JobLead.
     // The edit may be an update or a deletion of this JobLead.

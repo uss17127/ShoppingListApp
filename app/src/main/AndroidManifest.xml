@@ -15,20 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ShoppingListApp"
         tools:targetApi="31">
-        <activity
-            android:name=".ReviewItemsActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ItemRecyclerAdapter"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -64,6 +51,13 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.uga.cs.shoppinglistapp.ListManagement" />
+        </activity>
+        <activity
+            android:name=".ReviewItemsActivity"
+            android:parentActivityName=".ListManagement">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.uga.cs.shoppinglistapp.ListManagement"  />
         </activity>
     </application>
 

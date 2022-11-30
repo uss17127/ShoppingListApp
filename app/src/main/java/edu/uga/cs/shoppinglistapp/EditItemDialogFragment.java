@@ -72,7 +72,7 @@ public class EditItemDialogFragment extends DialogFragment {
         // Pre-fill the edit texts with the current values for this Item.
         // The user will be able to modify them.
         itemNameView.setText(itemName);
-        itemAmountView.setText(amount);
+        itemAmountView.setText(Integer.toString(amount));
         itemPriceView.setText(Double.toString(price));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -104,10 +104,10 @@ public class EditItemDialogFragment extends DialogFragment {
     private class SaveButtonClickListener implements DialogInterface.OnClickListener {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            String itemName = getArguments().getString("name");
-            int amount = getArguments().getInt("amount");
-            double price = getArguments().getDouble("price");
-            Item item = new Item(itemName, amount, price);
+            String itemName1 =  itemNameView.getText().toString();
+            int amount1 = Integer.parseInt(itemAmountView.getText().toString());
+            double price1 = Double.parseDouble(itemPriceView.getText().toString());
+            Item item = new Item(itemName1, amount1, price1);
             item.setKey(key);
 
             // get the Activity's listener to add the new job lead
@@ -133,6 +133,5 @@ public class EditItemDialogFragment extends DialogFragment {
             // close the dialog
             dismiss();
         }
-
     }
 }
