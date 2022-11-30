@@ -15,7 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ShoppingListApp"
         tools:targetApi="31">
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -57,7 +56,14 @@
             android:parentActivityName=".ListManagement">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.uga.cs.shoppinglistapp.ListManagement"  />
+                android:value="edu.uga.cs.shoppinglistapp.ListManagement" />
+        </activity>
+        <activity
+            android:name=".ReviewCartActivity"
+            android:parentActivityName=".ListManagement">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.uga.cs.shoppinglistapp.ListManagement" />
         </activity>
     </application>
 

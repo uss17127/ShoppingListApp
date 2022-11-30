@@ -29,11 +29,11 @@ import java.util.List;
  * This is an activity class for listing the current job leads.
  * The current job leads are listed as a RecyclerView.
  */
-public class ReviewItemsActivity
+public class ReviewCartActivity
         extends AppCompatActivity
         implements EditItemDialogFragment.EditItemDialogListener {
 
-    public static final String DEBUG_TAG = "ReviewItemActivity";
+    public static final String DEBUG_TAG = "ReviewCartActivity";
 
     private RecyclerView recyclerView;
     private ItemRecyclerAdapter recyclerAdapter;
@@ -48,7 +48,7 @@ public class ReviewItemsActivity
         Log.d( DEBUG_TAG, "onCreate()" );
 
         super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_review_items );
+        setContentView( R.layout.activity_review_cart );
 
         recyclerView = findViewById( R.id.recyclerView );
 
@@ -61,12 +61,12 @@ public class ReviewItemsActivity
         recyclerView.setLayoutManager(layoutManager);
 
         // the recycler adapter with job leads is empty at first; it will be updated later
-        recyclerAdapter = new ItemRecyclerAdapter( itemsList, ReviewItemsActivity.this );
+        recyclerAdapter = new ItemRecyclerAdapter( itemsList, ReviewCartActivity.this );
         recyclerView.setAdapter( recyclerAdapter );
 
         // get a Firebase DB instance reference
         database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("itemsneededlist");
+        DatabaseReference myRef = database.getReference("cartlist");
 
         // Set up a listener (event handler) to receive a value for the database reference.
         // This type of listener is called by Firebase once by immediately executing its onDataChange method
@@ -100,8 +100,8 @@ public class ReviewItemsActivity
     }
 
 
-    // This is our own callback for a DialogFragment which edits an existing Item.
-    // The edit may be an update or a deletion of this Item.
+    // This is our own callback for a DialogFragment which edits an existing item.
+    // The edit may be an update or a deletion of this item.
     // It is called from the EditItemDialogFragment.
     public void updateItem( int position, Item item, int action ) {
         if( action == EditItemDialogFragment.SAVE ) {
@@ -114,7 +114,7 @@ public class ReviewItemsActivity
             // Note that we are using a specific key (one child in the list)
             DatabaseReference ref = database
                     .getReference()
-                    .child( "itemsneededlist" )
+                    .child( "cartlist" )
                     .child( item.getKey() );
 
             // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
@@ -141,7 +141,7 @@ public class ReviewItemsActivity
             });
         }
         else if( action == EditItemDialogFragment.DELETE ) {
-            Log.d( DEBUG_TAG, "Deleting job lead at: " + position + "(" + item.getName() + ")" );
+            Log.d( DEBUG_TAG, "Deleting item at: " + position + "(" + item.getName() + ")" );
 
             // remove the deleted job lead from the list (internal list in the App)
             itemsList.remove( position );
@@ -153,7 +153,7 @@ public class ReviewItemsActivity
             // Note that we are using a specific key (one child in the list)
             DatabaseReference ref = database
                     .getReference()
-                    .child( "itemsneededlist" )
+                    .child( "cartlist" )
                     .child( item.getKey() );
 
             // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
