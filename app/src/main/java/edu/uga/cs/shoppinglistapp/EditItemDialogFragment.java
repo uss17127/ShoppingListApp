@@ -110,9 +110,9 @@ public class EditItemDialogFragment extends DialogFragment {
             Item item = new Item(itemName1, amount1, price1);
             item.setKey(key);
 
-            // get the Activity's listener to add the new job lead
+            // get the Activity's listener to add the new item
             EditItemDialogListener listener = (EditItemDialogFragment.EditItemDialogListener) getActivity();
-            // add the new job lead
+            // add the new item
             listener.updateItem(position, item, SAVE);
 
             // close the dialog

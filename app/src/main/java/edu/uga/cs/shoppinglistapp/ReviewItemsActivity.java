@@ -31,14 +31,17 @@ import java.util.List;
  */
 public class ReviewItemsActivity
         extends AppCompatActivity
-        implements EditItemDialogFragment.EditItemDialogListener {
+        implements EditItemDialogFragment.EditItemDialogListener, ItemRecyclerAdapter.checkItemListener {
 
     public static final String DEBUG_TAG = "ReviewItemActivity";
 
     private RecyclerView recyclerView;
     private ItemRecyclerAdapter recyclerAdapter;
 
+    //Item list for what is in the shopping list
     private List<Item> itemsList;
+    //Item list for checked items
+    private List<Item> checkedItem = new ArrayList<>();
 
     private FirebaseDatabase database;
 
@@ -60,7 +63,7 @@ public class ReviewItemsActivity
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // the recycler adapter with job leads is empty at first; it will be updated later
+        // the recycler adapter with items is empty at first; it will be updated later
         recyclerAdapter = new ItemRecyclerAdapter( itemsList, ReviewItemsActivity.this );
         recyclerView.setAdapter( recyclerAdapter );
 
@@ -178,5 +181,13 @@ public class ReviewItemsActivity
                 }
             });
         }
+    }
+
+
+    public void onItemCheck(Item item) {
+
+    }
+    public void onItemUncheck(Item item) {
+
     }
 }
