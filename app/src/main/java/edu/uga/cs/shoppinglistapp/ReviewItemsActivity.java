@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,11 +38,14 @@ public class ReviewItemsActivity
 
     private RecyclerView recyclerView;
     private ItemRecyclerAdapter recyclerAdapter;
+    private ImageButton cartButton;
 
     //Item list for what is in the shopping list
     private List<Item> itemsList;
+
     //Item list for checked items
     private List<Item> checkedItem = new ArrayList<>();
+    private  List<Integer> positionsList = new ArrayList<>();
 
     private FirebaseDatabase database;
 
@@ -54,6 +58,7 @@ public class ReviewItemsActivity
         setContentView( R.layout.activity_review_items );
 
         recyclerView = findViewById( R.id.recyclerView );
+        cartButton = findViewById( R.id.imageButtonCart);
 
 
         // initialize the Job Lead list
@@ -64,8 +69,11 @@ public class ReviewItemsActivity
         recyclerView.setLayoutManager(layoutManager);
 
         // the recycler adapter with items is empty at first; it will be updated later
-        recyclerAdapter = new ItemRecyclerAdapter( itemsList, ReviewItemsActivity.this );
+        recyclerAdapter = new ItemRecyclerAdapter(itemsList, ReviewItemsActivity.this);
         recyclerView.setAdapter( recyclerAdapter );
+
+        // Listener for moving items to cart
+        cartButton.setOnClickListener(new cartButtonListener());
 
         // get a Firebase DB instance reference
         database = FirebaseDatabase.getInstance();
@@ -110,7 +118,7 @@ public class ReviewItemsActivity
         if( action == EditItemDialogFragment.SAVE ) {
             Log.d( DEBUG_TAG, "Updating item at: " + position + "(" + item.getName() + ")" );
 
-            // Update the recycler view to show the changes in the updated job lead in that view
+            // Update the recycler view to show the changes in the updated item in that view
             recyclerAdapter.notifyItemChanged( position );
 
             // Update this item in Firebase
@@ -146,10 +154,10 @@ public class ReviewItemsActivity
         else if( action == EditItemDialogFragment.DELETE ) {
             Log.d( DEBUG_TAG, "Deleting job lead at: " + position + "(" + item.getName() + ")" );
 
-            // remove the deleted job lead from the list (internal list in the App)
+            // remove the deleted item from the list (internal list in the App)
             itemsList.remove( position );
 
-            // Update the recycler view to remove the deleted job lead from that view
+            // Update the recycler view to remove the deleted item from that view
             recyclerAdapter.notifyItemRemoved( position );
 
             // Delete this job lead in Firebase.
@@ -184,10 +192,72 @@ public class ReviewItemsActivity
     }
 
 
-    public void onItemCheck(Item item) {
-
+    public void onItemCheck(Item item, int position) {
+        checkedItem.add(item);
+        positionsList.add(position);
     }
-    public void onItemUncheck(Item item) {
+    public void onItemUncheck(Item item, int position) {
+        checkedItem.remove(item);
+        positionsList.remove(new Integer(position));
+    }
 
+    private class cartButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef1 = database.getReference("cartlist");
+            int positionInt = 0;
+            for (Item i : checkedItem) {
+
+                // Add item to cart
+                myRef1.push().setValue( i )
+                        .addOnSuccessListener( new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // Show a quick confirmation
+                                Toast.makeText(getApplicationContext(), "Item created for " + i.getName(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener( new OnFailureListener() {
+                            @Override
+                            public void onFailure( @NonNull Exception e ) {
+                                Toast.makeText( getApplicationContext(), "Failed to create a item for " + i.getName(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                // Remove item to cart
+                itemsList.remove(i);
+                recyclerAdapter.notifyItemRemoved(positionsList.get(positionInt));
+
+                DatabaseReference ref = database
+                        .getReference()
+                        .child( "itemsneededlist" )
+                        .child( i.getKey() );
+                ref.addListenerForSingleValueEvent( new ValueEventListener() {
+                    @Override
+                    public void onDataChange( @NonNull DataSnapshot dataSnapshot ) {
+                        dataSnapshot.getRef().removeValue().addOnSuccessListener( new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d( DEBUG_TAG, "deleted item at: " + "(" + i.getName() + ")" );
+                                //Toast.makeText(getApplicationContext(), "Item deleted for " + i.getName(),Toast.LENGTH_SHORT).show();
+                                }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled( @NonNull DatabaseError databaseError ) {
+                        Log.d( DEBUG_TAG, "failed to delete item at: (" + i.getName() + ")" );
+                        //Toast.makeText(getApplicationContext(), "Failed to delete " + i.getName(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                positionInt++;
+            }
+            checkedItem.clear();
+
+        }
     }
 }

@@ -37,6 +37,10 @@ public class ReviewPurchasedItemsActivity
 
     private FirebaseDatabase database;
 
+    //Item list for checked items
+    private List<Item> checkedItem = new ArrayList<>();
+    private  List<Integer> positionsList = new ArrayList<>();
+
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
 
@@ -56,7 +60,7 @@ public class ReviewPurchasedItemsActivity
         recyclerView.setLayoutManager(layoutManager);
 
         // the recycler adapter with job leads is empty at first; it will be updated later
-        recyclerAdapter = new ItemRecyclerAdapter( itemsList, ReviewPurchasedItemsActivity.this );
+        recyclerAdapter = new ItemRecyclerAdapter( itemsList, ReviewPurchasedItemsActivity.this);
         recyclerView.setAdapter( recyclerAdapter );
 
         // get a Firebase DB instance reference
@@ -173,5 +177,14 @@ public class ReviewPurchasedItemsActivity
                 }
             });
         }
+    }
+
+    public void onItemCheck(Item item, int position) {
+        checkedItem.add(item);
+        positionsList.add(position);
+    }
+    public void onItemUncheck(Item item, int position) {
+        checkedItem.remove(item);
+        positionsList.remove(position);
     }
 }

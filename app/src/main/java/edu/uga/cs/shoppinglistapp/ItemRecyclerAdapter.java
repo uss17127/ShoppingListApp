@@ -22,17 +22,18 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
     public static final String DEBUG_TAG = "ItemRecyclerAdapter";
 
     public interface checkItemListener {
-        void onItemCheck(Item item);
-        void onItemUncheck(Item item);
+        void onItemCheck(Item item, int position);
+        void onItemUncheck(Item item, int position);
     }
 
     private List<Item> itemList;
     private Context context;
-    private checkItemListener checkListener;
+    private checkItemListener checkItemListener;
 
 
 
-    public ItemRecyclerAdapter(List<Item> List, Context context ) {
+
+    public ItemRecyclerAdapter(List<Item> List, Context context) {
         this.itemList = List;
         this.context = context;
     }
@@ -67,6 +68,7 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
     public void onBindViewHolder( ItemHolder holder, int position ) {
         Item item = itemList.get( position );
 
+
         Log.d( DEBUG_TAG, "onBindViewHolder: " + item );
 
         String key = item.getKey();
@@ -86,13 +88,15 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
             @Override
             public void onClick(View v) {
                 boolean checked = holder.cbselect.isChecked();
+                checkItemListener =  (ItemRecyclerAdapter.checkItemListener) context;
 
                 if(checked) {
                     // Adds item to item list in ReviewItemsActivity
-                    checkListener.onItemCheck(item);
+                    checkItemListener.onItemCheck(itemList.get(holder.getAdapterPosition()), holder.getAdapterPosition());
+                    Log.d(DEBUG_TAG, "added checked");
                 } else {
                     // Removes item to item list in ReviewItemsActivity
-                    checkListener.onItemUncheck(item);
+                    checkItemListener.onItemUncheck(itemList.get(holder.getAdapterPosition()), holder.getAdapterPosition());
                 }
 
             }

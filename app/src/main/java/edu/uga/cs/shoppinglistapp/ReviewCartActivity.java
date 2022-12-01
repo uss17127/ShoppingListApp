@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class ReviewCartActivity
         extends AppCompatActivity
-        implements EditItemDialogFragment.EditItemDialogListener {
+        implements EditItemDialogFragment.EditItemDialogListener, ItemRecyclerAdapter.checkItemListener  {
 
     public static final String DEBUG_TAG = "ReviewCartActivity";
 
@@ -41,6 +41,10 @@ public class ReviewCartActivity
     private List<Item> itemsList;
 
     private FirebaseDatabase database;
+
+    //Item list for checked items
+    private List<Item> checkedItem = new ArrayList<>();
+    private  List<Integer> positionsList = new ArrayList<>();
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -53,20 +57,20 @@ public class ReviewCartActivity
         recyclerView = findViewById( R.id.recyclerView );
 
 
-        // initialize the Job Lead list
+        // initialize the item list
         itemsList = new ArrayList<Item>();
 
         // use a linear layout manager for the recycler view
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // the recycler adapter with job leads is empty at first; it will be updated later
-        recyclerAdapter = new ItemRecyclerAdapter( itemsList, ReviewCartActivity.this );
+        // the recycler adapter with items is empty at first; it will be updated later
+        recyclerAdapter = new ItemRecyclerAdapter( itemsList, ReviewCartActivity.this);
         recyclerView.setAdapter( recyclerAdapter );
 
         // get a Firebase DB instance reference
         database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("itemsneededlist");
+        DatabaseReference myRef = database.getReference("cartlist");
 
         // Set up a listener (event handler) to receive a value for the database reference.
         // This type of listener is called by Firebase once by immediately executing its onDataChange method
@@ -114,7 +118,7 @@ public class ReviewCartActivity
             // Note that we are using a specific key (one child in the list)
             DatabaseReference ref = database
                     .getReference()
-                    .child( "itemsneededlist" )
+                    .child( "cartlist" )
                     .child( item.getKey() );
 
             // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
@@ -153,7 +157,7 @@ public class ReviewCartActivity
             // Note that we are using a specific key (one child in the list)
             DatabaseReference ref = database
                     .getReference()
-                    .child( "itemsneededlist" )
+                    .child( "cartlist" )
                     .child( item.getKey() );
 
             // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
@@ -178,5 +182,14 @@ public class ReviewCartActivity
                 }
             });
         }
+    }
+
+    public void onItemCheck(Item item, int position) {
+        checkedItem.add(item);
+        positionsList.add(position);
+    }
+    public void onItemUncheck(Item item, int position) {
+        checkedItem.remove(item);
+        positionsList.remove(new Integer(position));
     }
 }
