@@ -65,6 +65,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.uga.cs.shoppinglistapp.ListManagement" />
         </activity>
+        <activity
+            android:name=".ReviewPurchasedItemsActivity"
+            android:parentActivityName=".ListManagement">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.uga.cs.shoppinglistapp.ListManagement" />
+        </activity>
     </application>
 
 </manifest>

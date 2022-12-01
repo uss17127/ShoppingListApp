@@ -17,10 +17,12 @@ public class ListManagement extends AppCompatActivity {
         Button addItem = findViewById( R.id.button4);
         Button viewList = findViewById(R.id.button5);
         Button cartList = findViewById(R.id.button6);
+        Button purchasedList = findViewById(R.id.button7);
 
         addItem.setOnClickListener(new addItemButtonClickListener());
         viewList.setOnClickListener(new viewListButtonClickListener());
         cartList.setOnClickListener(new viewCartClickListener() );
+        purchasedList.setOnClickListener(new viewPurchasedClickListener());
 
     }
 
@@ -47,6 +49,15 @@ public class ListManagement extends AppCompatActivity {
         public void onClick(View view) {
             // start the user registration activity
             Intent intent = new Intent(view.getContext(), ReviewCartActivity.class);
+            view.getContext().startActivity(intent);
+        }
+    }
+
+    private class viewPurchasedClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            // start the user registration activity
+            Intent intent = new Intent(view.getContext(), ReviewPurchasedItemsActivity.class);
             view.getContext().startActivity(intent);
         }
     }
