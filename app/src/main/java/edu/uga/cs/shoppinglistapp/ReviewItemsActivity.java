@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class ReviewItemsActivity
     private ItemRecyclerAdapter recyclerAdapter;
     private ImageButton cartButton;
 
+
     //Item list for what is in the shopping list
     private List<Item> itemsList;
 
@@ -59,6 +61,7 @@ public class ReviewItemsActivity
 
         recyclerView = findViewById( R.id.recyclerView );
         cartButton = findViewById( R.id.imageButtonCart);
+
 
 
         // initialize the Job Lead list

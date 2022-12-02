@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,7 @@ public class ReviewCartActivity
 
     private RecyclerView recyclerView;
     private ItemRecyclerAdapter recyclerAdapter;
+    private Button returnToList;
 
     private List<Item> itemsList;
 
@@ -55,6 +57,7 @@ public class ReviewCartActivity
         setContentView( R.layout.activity_review_cart );
 
         recyclerView = findViewById( R.id.recyclerView );
+        returnToList = findViewById(R.id.returnToList);
 
 
         // initialize the item list
@@ -67,6 +70,9 @@ public class ReviewCartActivity
         // the recycler adapter with items is empty at first; it will be updated later
         recyclerAdapter = new ItemRecyclerAdapter( itemsList, ReviewCartActivity.this);
         recyclerView.setAdapter( recyclerAdapter );
+
+        //Listener for moving items to purchased list
+        returnToList.setOnClickListener(new returnToListButtonListener());
 
         // get a Firebase DB instance reference
         database = FirebaseDatabase.getInstance();
@@ -181,6 +187,66 @@ public class ReviewCartActivity
                             Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+    }
+
+    private class returnToListButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef1 = database.getReference("itemsneededlist");
+            int positionInt = 0;
+            for (Item i : checkedItem) {
+
+                // Add item to cart
+                myRef1.push().setValue( i )
+                        .addOnSuccessListener( new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // Show a quick confirmation
+                                Toast.makeText(getApplicationContext(), "Item created for " + i.getName(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener( new OnFailureListener() {
+                            @Override
+                            public void onFailure( @NonNull Exception e ) {
+                                Toast.makeText( getApplicationContext(), "Failed to create a item for " + i.getName(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                // Remove item to cart
+                itemsList.remove(i);
+                recyclerAdapter.notifyItemRemoved(positionsList.get(positionInt));
+
+                DatabaseReference ref = database
+                        .getReference()
+                        .child( "cartlist" )
+                        .child( i.getKey() );
+                ref.addListenerForSingleValueEvent( new ValueEventListener() {
+                    @Override
+                    public void onDataChange( @NonNull DataSnapshot dataSnapshot ) {
+                        dataSnapshot.getRef().removeValue().addOnSuccessListener( new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d( DEBUG_TAG, "deleted item at: " + "(" + i.getName() + ")" );
+                                //Toast.makeText(getApplicationContext(), "Item deleted for " + i.getName(),Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled( @NonNull DatabaseError databaseError ) {
+                        Log.d( DEBUG_TAG, "failed to delete item at: (" + i.getName() + ")" );
+                        //Toast.makeText(getApplicationContext(), "Failed to delete " + i.getName(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                positionInt++;
+            }
+            checkedItem.clear();
+
         }
     }
 
