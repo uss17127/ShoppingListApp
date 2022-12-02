@@ -44,7 +44,7 @@
 
         <item name="android:textColor">@color/green_dark</item>
 
-        <item name="android:textColorLink">@color/green_dark</item>
+        <item name="android:textColorLink">#C2710C</item>
 
         <!-- Remove the action bar from the login dialog -->
         <item name="windowActionBar">false</item>
@@ -55,7 +55,7 @@
     <!-- Custom styling of the Trouble signing in link -->
     <style name="FirebaseUI.Text.Link">
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/green_dark</item>
+        <item name="android:textColor">#C2710C</item>
     </style>
 
     <!-- Custom styling of the email TextInputLayout view in the Firebase sign-in screen -->

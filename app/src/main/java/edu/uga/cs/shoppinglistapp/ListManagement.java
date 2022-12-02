@@ -18,12 +18,22 @@ public class ListManagement extends AppCompatActivity {
         Button viewList = findViewById(R.id.button5);
         Button cartList = findViewById(R.id.button6);
         Button purchasedList = findViewById(R.id.button7);
+        Button signOut = findViewById(R.id.signOut);
 
         addItem.setOnClickListener(new addItemButtonClickListener());
         viewList.setOnClickListener(new viewListButtonClickListener());
         cartList.setOnClickListener(new viewCartClickListener() );
         purchasedList.setOnClickListener(new viewPurchasedClickListener());
+        signOut.setOnClickListener(new signOutButtonClickListener());
+    }
 
+    private class signOutButtonClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            // Go back to main screen
+            Intent intent = new Intent(view.getContext(), MainActivity.class);
+            view.getContext().startActivity(intent);
+        }
     }
 
     private class addItemButtonClickListener implements View.OnClickListener {

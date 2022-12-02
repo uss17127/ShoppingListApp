@@ -17,6 +17,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             // start the user registration activity
+            FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(view.getContext(), RegisterActivity.class);
             view.getContext().startActivity(intent);
         }
