@@ -27,18 +27,18 @@ import java.util.List;
  * The current job leads are listed as a RecyclerView.
  */
 public class ReviewPurchasedItemsActivity
-        extends AppCompatActivity {
+        extends AppCompatActivity
+implements EditItemDialogFragment.EditItemDialogListener{
 
     public static final String DEBUG_TAG = "ReviewPurchasedActivity";
 
     private RecyclerView recyclerView1;
     private RecyclerView recyclerView2;
-    private ItemRecyclerAdapter recyclerAdapter;
+    private PurchaseRecyclerAdapter recyclerAdapter;
 
 
     private String buyer;
-    private List<Item> itemsList;
-    private List<Item> shoppingList;
+    private List<Purchase> purchaseList;
     double totalPrice;
 
     private FirebaseDatabase database;
@@ -54,14 +54,14 @@ public class ReviewPurchasedItemsActivity
         recyclerView1 = findViewById(R.id.recyclerView);
 
         // initialize the item list
-        itemsList = new ArrayList<Item>();
+        purchaseList = new ArrayList<Purchase>();
 
         // use a linear layout manager for the recycler view
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView1.setLayoutManager(layoutManager);
 
         // the recycler adapter with job leads is empty at first; it will be updated later
-        recyclerAdapter = new ItemRecyclerAdapter(itemsList, ReviewPurchasedItemsActivity.this);
+        recyclerAdapter = new PurchaseRecyclerAdapter(purchaseList, ReviewPurchasedItemsActivity.this);
         recyclerView1.setAdapter(recyclerAdapter);
 
 
@@ -83,12 +83,12 @@ public class ReviewPurchasedItemsActivity
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Once we have a DataSnapshot object, we need to iterate over the elements and place them on our job lead list.
-                itemsList.clear(); // clear the current content; this is inefficient!
+                purchaseList.clear(); // clear the current content; this is inefficient!
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    Item item = postSnapshot.getValue(Item.class);
-                    item.setKey(postSnapshot.getKey());
-                    itemsList.add(item);
-                    Log.d(DEBUG_TAG, "ValueEventListener: added: " + item);
+                    Purchase purchase = postSnapshot.getValue(Purchase.class);
+                    purchase.setKey(postSnapshot.getKey());
+                    purchaseList.add(purchase);
+                    Log.d(DEBUG_TAG, "ValueEventListener: added: " + purchase);
                     Log.d(DEBUG_TAG, "ValueEventListener: key: " + postSnapshot.getKey());
                 }
 
@@ -169,8 +169,8 @@ public class ReviewPurchasedItemsActivity
                     });
 
 
-            // remove the deleted job lead from the list (internal list in the App)
-            itemsList.remove( position );
+            // remove the deleted purchase from the list (internal list in the App)
+            purchaseList.remove( position );
 
             // Update the recycler view to remove the deleted job lead from that view
             recyclerAdapter.notifyItemRemoved( position );
