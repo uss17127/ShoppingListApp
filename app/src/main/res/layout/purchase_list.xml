@@ -33,6 +33,7 @@
                 android:text="Buyer" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/itemsBought"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
