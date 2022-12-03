@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -72,6 +74,8 @@ public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecycl
             total += i.getPrice();
         }
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(holder.itemView.getContext());
+        holder.itemsBought.setLayoutManager(layoutManager);
         PurchaseItemRecyclerAdapter purchaseItemRecyclerAdapter = new PurchaseItemRecyclerAdapter(bought, holder.itemView.getContext());
         holder.itemsBought.setAdapter(purchaseItemRecyclerAdapter);
 

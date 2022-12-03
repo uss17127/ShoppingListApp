@@ -37,7 +37,7 @@ public class PurchaseItemRecyclerAdapter extends RecyclerView.Adapter<PurchaseIt
 
         public ItemHolder(View itemView ) {
             super(itemView);
-            itemName = itemView.findViewById( R.id.itemName );
+            itemName = itemView.findViewById( R.id.nameOfItem );
         }
     }
 
