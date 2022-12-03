@@ -30,16 +30,16 @@ public class ReviewPurchasedItemsActivity
 
     public static final String DEBUG_TAG = "ReviewPurchasedActivity";
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView1;
+    private RecyclerView recyclerView2;
     private ItemRecyclerAdapter recyclerAdapter;
 
+
+    private String buyer;
     private List<Item> itemsList;
+    double totalPrice;
 
     private FirebaseDatabase database;
-
-    //Item list for checked items
-    private List<Item> checkedItem = new ArrayList<>();
-    private List<Integer> positionsList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +49,18 @@ public class ReviewPurchasedItemsActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_purchased_items);
 
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView1 = findViewById(R.id.recyclerView);
 
-        // initialize the Job Lead list
+        // initialize the item list
         itemsList = new ArrayList<Item>();
 
         // use a linear layout manager for the recycler view
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView1.setLayoutManager(layoutManager);
 
         // the recycler adapter with job leads is empty at first; it will be updated later
         recyclerAdapter = new ItemRecyclerAdapter(itemsList, ReviewPurchasedItemsActivity.this);
-        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView1.setAdapter(recyclerAdapter);
 
 
         // get a Firebase DB instance reference
