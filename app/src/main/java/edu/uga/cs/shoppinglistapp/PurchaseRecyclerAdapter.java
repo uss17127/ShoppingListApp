@@ -62,23 +62,27 @@ public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecycl
         Purchase purchase =  purchaseList.get( position );
 
 
-        Log.d( DEBUG_TAG, "onBindViewHolder: " + item );
+        Log.d( DEBUG_TAG, "onBindViewHolder: " + purchase );
 
         String key =  purchase.getKey();
         String buyerName =  purchase.getBuyer();
         List<Item> bought = purchase.getItems();
-        for (bo)
+        double total = 0;
+        for (Item i: bought) {
+            total += i.getPrice();
+        }
 
+        PurchaseItemRecyclerAdapter purchaseItemRecyclerAdapter = new PurchaseItemRecyclerAdapter(bought, holder.itemView.getContext());
+        holder.itemsBought.setAdapter(purchaseItemRecyclerAdapter);
 
-        holder.itemName.setText( item.getName());
-        holder.itemAmount.setText( Integer.toString(item.getAmount()));
-        holder.itemPrice.setText( Double.toString(item.getPrice()) );
+        holder.buyer.setText(buyerName);
+        holder.totalPrice.setText( Double.toString(total) );
 
 
     }
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return purchaseList.size();
     }
 }
