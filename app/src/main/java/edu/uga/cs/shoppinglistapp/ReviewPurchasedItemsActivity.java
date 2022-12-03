@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +38,7 @@ public class ReviewPurchasedItemsActivity
 
     private String buyer;
     private List<Item> itemsList;
+    private List<Item> shoppingList;
     double totalPrice;
 
     private FirebaseDatabase database;
@@ -100,6 +102,111 @@ public class ReviewPurchasedItemsActivity
             }
         });
     }
+
+    // This is our own callback for a DialogFragment which edits an existing item.
+    // The edit may be an update or a deletion of this item.
+    // It is called from the EditItemDialogFragment.
+    public void updateItem( int position, Item item, int action ) {
+        if( action == EditItemDialogFragment.SAVE ) {
+            Log.d( DEBUG_TAG, "Updating item at: " + position + "(" + item.getName() + ")" );
+
+            // Update the recycler view to show the changes in the updated job lead in that view
+            recyclerAdapter.notifyItemChanged( position );
+
+            // Update this item in Firebase
+            // Note that we are using a specific key (one child in the list)
+            DatabaseReference ref = database
+                    .getReference()
+                    .child( "purchasedlist" )
+                    .child( item.getKey() );
+
+            // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
+            // to maintain job leads.
+            ref.addListenerForSingleValueEvent( new ValueEventListener() {
+                @Override
+                public void onDataChange( @NonNull DataSnapshot dataSnapshot ) {
+                    dataSnapshot.getRef().setValue( item ).addOnSuccessListener( new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d( DEBUG_TAG, "updated item at: " + position + "(" + item.getName() + ")" );
+                            Toast.makeText(getApplicationContext(), "Item updated for " + item.getName(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled( @NonNull DatabaseError databaseError ) {
+                    Log.d( DEBUG_TAG, "failed to update item at: " + position + "(" + item.getName() + ")" );
+                    Toast.makeText(getApplicationContext(), "Failed to update " + item.getName(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else if( action == EditItemDialogFragment.DELETE ) {
+            Log.d( DEBUG_TAG, "Deleting item at: " + position + "(" + item.getName() + ") and " +
+                    "returning it back to itemsneededlist" );
+
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef1 = database.getReference("itemsneededlist");
+
+            // Add item to items needed list
+            myRef1.push().setValue(item)
+                    .addOnSuccessListener( new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // Show a quick confirmation
+                            Toast.makeText(getApplicationContext(), "Item created for " + item.getName(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener( new OnFailureListener() {
+                        @Override
+                        public void onFailure( @NonNull Exception e ) {
+                            Toast.makeText( getApplicationContext(), "Failed to create a item for " + item.getName(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+            // remove the deleted job lead from the list (internal list in the App)
+            itemsList.remove( position );
+
+            // Update the recycler view to remove the deleted job lead from that view
+            recyclerAdapter.notifyItemRemoved( position );
+
+            // Delete this job lead in Firebase.
+            // Note that we are using a specific key (one child in the list)
+            DatabaseReference ref = database
+                    .getReference()
+                    .child( "purchasedlist" )
+                    .child( item.getKey() );
+
+            // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
+            // to maintain job leads.
+            ref.addListenerForSingleValueEvent( new ValueEventListener() {
+                @Override
+                public void onDataChange( @NonNull DataSnapshot dataSnapshot ) {
+                    dataSnapshot.getRef().removeValue().addOnSuccessListener( new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d( DEBUG_TAG, "deleted item at: " + position + "(" + item.getName() + ")" );
+                            Toast.makeText(getApplicationContext(), "Item deleted for " + item.getName(),
+                                    Toast.LENGTH_SHORT).show();                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled( @NonNull DatabaseError databaseError ) {
+                    Log.d( DEBUG_TAG, "failed to delete item at: " + position + "(" + item.getName() + ")" );
+                    Toast.makeText(getApplicationContext(), "Failed to delete " + item.getName(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+
+        }
 }
 
 
