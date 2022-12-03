@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,7 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,8 +41,10 @@ public class ReviewCartActivity
     private RecyclerView recyclerView;
     private ItemRecyclerAdapter recyclerAdapter;
     private Button returnToList;
+    private Button buy;
 
     private List<Item> itemsList;
+    private List<Item> purchaseItemList;
 
     private FirebaseDatabase database;
 
@@ -58,10 +62,14 @@ public class ReviewCartActivity
 
         recyclerView = findViewById( R.id.recyclerView );
         returnToList = findViewById(R.id.returnToList);
+        buy = findViewById(R.id.buy);
 
 
         // initialize the item list
         itemsList = new ArrayList<Item>();
+        // initialize the purchase item list
+        purchaseItemList = new ArrayList<Item>();
+
 
         // use a linear layout manager for the recycler view
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -73,6 +81,8 @@ public class ReviewCartActivity
 
         //Listener for moving items to purchased list
         returnToList.setOnClickListener(new returnToListButtonListener());
+        //Listener for purchasing items and moving them to the purchased list
+        buy.setOnClickListener(new buyItemsButtonListener());
 
         // get a Firebase DB instance reference
         database = FirebaseDatabase.getInstance();
@@ -198,7 +208,7 @@ public class ReviewCartActivity
             int positionInt = 0;
             for (Item i : checkedItem) {
 
-                // Add item to cart
+                // Add item to items needed list
                 myRef1.push().setValue( i )
                         .addOnSuccessListener( new OnSuccessListener<Void>() {
                             @Override
@@ -246,6 +256,78 @@ public class ReviewCartActivity
                 positionInt++;
             }
             checkedItem.clear();
+
+        }
+    }
+
+    private class buyItemsButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+            int positionInt = 0;
+            for (Item i : checkedItem) {
+
+                // Add items to purchase item list
+                purchaseItemList.add(i);
+
+                // Remove item to cart
+                itemsList.remove(i);
+                recyclerAdapter.notifyItemRemoved(positionsList.get(positionInt));
+
+                DatabaseReference ref = database
+                        .getReference()
+                        .child( "cartlist" )
+                        .child( i.getKey() );
+                ref.addListenerForSingleValueEvent( new ValueEventListener() {
+                    @Override
+                    public void onDataChange( @NonNull DataSnapshot dataSnapshot ) {
+                        dataSnapshot.getRef().removeValue().addOnSuccessListener( new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d( DEBUG_TAG, "deleted item at: " + "(" + i.getName() + ")" );
+                                //Toast.makeText(getApplicationContext(), "Item deleted for " + i.getName(),Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled( @NonNull DatabaseError databaseError ) {
+                        Log.d( DEBUG_TAG, "failed to delete item at: (" + i.getName() + ")" );
+                        //Toast.makeText(getApplicationContext(), "Failed to delete " + i.getName(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                positionInt++;
+            }
+
+            //Getting email of person making this purchase
+            TextView email = findViewById(R.id.email);
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String splitEmail[] = user.getEmail().split("@");
+            Purchase bought = new Purchase(splitEmail[0], purchaseItemList);
+
+            DatabaseReference myRef1 = database.getReference("purchasedlist");
+            myRef1.push().setValue(bought)
+                    .addOnSuccessListener( new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // Show a quick confirmation
+                            Toast.makeText(getApplicationContext(), "Item created for " + bought.getItems(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener( new OnFailureListener() {
+                        @Override
+                        public void onFailure( @NonNull Exception e ) {
+                            Toast.makeText( getApplicationContext(), "Failed to create a item for " + bought.getItems(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+            checkedItem.clear();
+            purchaseItemList.clear();
 
         }
     }
