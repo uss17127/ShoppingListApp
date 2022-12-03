@@ -44,7 +44,7 @@ public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecycl
 
             buyer = itemView.findViewById( R.id.nameOfItem );
             itemsBought = itemView.findViewById( R.id.itemsBought);
-            totalPrice = itemView.findViewById( R.id.itemPrice );
+            totalPrice = itemView.findViewById( R.id.total );
 
         }
     }
