@@ -25,10 +25,7 @@
         android:orientation="horizontal"
         android:paddingLeft="10dp"
         android:paddingEnd="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
             android:id="@+id/button12"
