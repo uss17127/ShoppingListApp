@@ -171,17 +171,18 @@ implements EditPurchaseItemDialogFragment.EditItemDialogListener{
 
 
             // remove the deleted purchase from the list (internal list in the App)
-            purchaseList.remove( position );
+            //purchaseList.remove( position );
 
             // Update the recycler view to remove the deleted job lead from that view
-            recyclerAdapter.notifyItemRemoved( position );
+            recyclerAdapter.notifyItemChanged( positionPurchase );
 
             // Delete this job lead in Firebase.
             // Note that we are using a specific key (one child in the list)
             DatabaseReference ref = database
                     .getReference()
-                    .child( "purchasedlist" )
-                    .child( item.getKey() );
+                    .child("purchasedlist")
+                    .child(keyPurchase).child("items")
+                    .child(Integer.toString(position));
 
             // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
             // to maintain job leads.
