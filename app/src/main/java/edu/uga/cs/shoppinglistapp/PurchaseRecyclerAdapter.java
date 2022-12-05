@@ -40,6 +40,7 @@ public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecycl
         TextView buyer;
         RecyclerView itemsBought;
         TextView totalPrice;
+        PurchaseItemRecyclerAdapter purchaseItemRecyclerAdapter;
 
         public ItemHolder(View itemView ) {
             super(itemView);
@@ -47,6 +48,7 @@ public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecycl
             buyer = itemView.findViewById( R.id.nameOfItem );
             itemsBought = itemView.findViewById( R.id.itemsBought);
             totalPrice = itemView.findViewById( R.id.total );
+
 
         }
     }
@@ -76,8 +78,10 @@ public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecycl
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(holder.itemView.getContext());
         holder.itemsBought.setLayoutManager(layoutManager);
-        PurchaseItemRecyclerAdapter purchaseItemRecyclerAdapter = new PurchaseItemRecyclerAdapter(bought, holder.itemView.getContext());
-        holder.itemsBought.setAdapter(purchaseItemRecyclerAdapter);
+        holder.purchaseItemRecyclerAdapter = new PurchaseItemRecyclerAdapter(bought, holder.itemView.getContext());
+        holder.purchaseItemRecyclerAdapter.setPurchaseKey(purchaseList.get(holder.getAdapterPosition()).getKey());
+        holder.purchaseItemRecyclerAdapter.setPositionOfPurchase(holder.getAdapterPosition());
+        holder.itemsBought.setAdapter(holder.purchaseItemRecyclerAdapter);
 
         holder.buyer.setText(buyerName);
         holder.totalPrice.setText( Double.toString(total) );
@@ -89,4 +93,5 @@ public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecycl
     public int getItemCount() {
         return purchaseList.size();
     }
+
 }

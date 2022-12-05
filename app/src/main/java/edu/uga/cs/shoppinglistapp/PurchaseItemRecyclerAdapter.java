@@ -23,6 +23,9 @@ public class PurchaseItemRecyclerAdapter extends RecyclerView.Adapter<PurchaseIt
 
     private List<Item> itemList;
     private Context context;
+    private String purchaseKey;
+    private int positionOfPurchase;
+
 
 
     public PurchaseItemRecyclerAdapter(List<Item> List, Context context) {
@@ -77,8 +80,8 @@ public class PurchaseItemRecyclerAdapter extends RecyclerView.Adapter<PurchaseIt
             public void onClick(View v) {
                 //Log.d( TAG, "onBindViewHolder: getItemId: " + holder.getItemId() );
                 //Log.d( TAG, "onBindViewHolder: getAdapterPosition: " + holder.getAdapterPosition() );
-                EditItemDialogFragment editItemFragment =
-                        EditItemDialogFragment.newInstance( holder.getAdapterPosition(), key, itemName, itemAmount, itemPrice);
+                EditPurchaseItemDialogFragment editItemFragment =
+                        EditPurchaseItemDialogFragment.newInstance( holder.getAdapterPosition(), key, itemName, itemAmount, itemPrice, purchaseKey, positionOfPurchase);
                 editItemFragment.show( ((AppCompatActivity)context).getSupportFragmentManager(), null);
             }
         });
@@ -88,4 +91,21 @@ public class PurchaseItemRecyclerAdapter extends RecyclerView.Adapter<PurchaseIt
     public int getItemCount() {
         return itemList.size();
     }
+
+    public void setPurchaseKey(String purchaseKey) {
+        this.purchaseKey = purchaseKey;
+    }
+
+    public String getPurchaseKey() {
+        return purchaseKey;
+    }
+
+    public void setPositionOfPurchase(int positionOfPurchase) {
+        this.positionOfPurchase = positionOfPurchase;
+    }
+
+    public int getPositionOfPurchase() {
+        return positionOfPurchase;
+    }
+
 }
