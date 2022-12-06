@@ -24,6 +24,7 @@ public class ListManagement extends AppCompatActivity {
         Button cartList = findViewById(R.id.button6);
         Button purchasedList = findViewById(R.id.button7);
         Button signOut = findViewById(R.id.signOut);
+        TextView numUsers = findViewById(R.id.numUsers);
         // set email
         TextView email = findViewById(R.id.email);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

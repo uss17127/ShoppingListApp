@@ -30,13 +30,31 @@ public class Purchase {
         this.key = key;
     }
 
-    public String getBuyer() {return buyer;}
+    public String getBuyer() {
+        return buyer;
+    }
 
-    public void setBuyer(String buyerPerson) {buyer = buyerPerson;}
+    public void setBuyer(String buyerPerson) {
+        buyer = buyerPerson;
+    }
 
-    public List<Item> getItems() {return items;}
+    public List<Item> getItems() {
+        return items;
+    }
 
-    public void setItems(List<Item> itemsBought) {items = itemsBought;}
+    public void setItems(List<Item> itemsBought) {
+        items = itemsBought;
+    }
+
+    public double getTotal() {
+        double total = 0;
+        for (Item x : items) {
+            total += x.getPrice();
+        }
+        return total;
+    }
+
+
 
 
 }

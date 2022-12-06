@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -81,6 +82,7 @@ public class ReviewItemsActivity
         // get a Firebase DB instance reference
         database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("itemsneededlist");
+
 
         // Set up a listener (event handler) to receive a value for the database reference.
         // This type of listener is called by Firebase once by immediately executing its onDataChange method

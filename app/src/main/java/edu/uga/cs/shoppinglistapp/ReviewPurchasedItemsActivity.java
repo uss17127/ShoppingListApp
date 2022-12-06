@@ -1,7 +1,11 @@
 package edu.uga.cs.shoppinglistapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,19 +32,21 @@ import java.util.List;
  */
 public class ReviewPurchasedItemsActivity
         extends AppCompatActivity
-implements EditPurchaseItemDialogFragment.EditItemDialogListener{
+implements EditPurchaseItemDialogFragment.EditItemDialogListener {
 
     public static final String DEBUG_TAG = "ReviewPurchasedActivity";
 
     private RecyclerView recyclerView1;
     private RecyclerView recyclerView2;
     private PurchaseRecyclerAdapter recyclerAdapter;
+    private double totalPrice;
+    private TextView price;
+    private Button settle;
 
 
     private String buyer;
     private List<Purchase> purchaseList;
-    double totalPrice;
-
+    private double numChildren;
     private FirebaseDatabase database;
 
     @Override
@@ -52,6 +58,25 @@ implements EditPurchaseItemDialogFragment.EditItemDialogListener{
         setContentView(R.layout.activity_review_purchased_items);
 
         recyclerView1 = findViewById(R.id.recyclerView);
+        price = findViewById(R.id.totalPrice);
+        settle = findViewById(R.id.settle);
+
+        database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("users");
+        reference.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                numChildren = snapshot.getChildrenCount();
+                Log.d(DEBUG_TAG, "numChildren: " + numChildren);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("ValueEventListener: reading failed: " + databaseError.getMessage());
+            }
+        });
+
 
         // initialize the item list
         purchaseList = new ArrayList<Purchase>();
@@ -66,10 +91,7 @@ implements EditPurchaseItemDialogFragment.EditItemDialogListener{
 
 
         // get a Firebase DB instance reference
-        database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("purchasedlist");
-
-
 
 
         // Set up a listener (event handler) to receive a value for the database reference.
@@ -91,6 +113,16 @@ implements EditPurchaseItemDialogFragment.EditItemDialogListener{
                     Log.d(DEBUG_TAG, "ValueEventListener: added: " + purchase);
                     Log.d(DEBUG_TAG, "ValueEventListener: key: " + postSnapshot.getKey());
                 }
+                for (Purchase x : purchaseList) {
+                    totalPrice += x.getTotal();
+                }
+
+                Log.d(DEBUG_TAG, "totalPrice: " + totalPrice);
+                totalPrice = totalPrice / numChildren;
+                totalPrice = Math.round(totalPrice * 100.0) / 100.0;
+                Log.d(DEBUG_TAG, "totalPrice final: " + totalPrice);
+                price.setText(Double.toString(totalPrice));
+
 
                 Log.d(DEBUG_TAG, "ValueEventListener: notifying recyclerAdapter");
                 recyclerAdapter.notifyDataSetChanged();
@@ -101,116 +133,159 @@ implements EditPurchaseItemDialogFragment.EditItemDialogListener{
                 System.out.println("ValueEventListener: reading failed: " + databaseError.getMessage());
             }
         });
+
+
+        settle.setOnClickListener(new settleButtonClickListener());
+
     }
 
-    // This is our own callback for a DialogFragment which edits an existing item.
-    // The edit may be an update or a deletion of this item.
-    // It is called from the EditItemDialogFragment.
-    public void updateItem( int position, Item item, int action, String keyPurchase,  int positionPurchase) {
-        if( action == EditItemDialogFragment.SAVE ) {
-            Log.d( DEBUG_TAG, "Updating item at: " + position + "(" + item.getName() + ")" );
-
-            // Update the recycler view to show the changes in the updated job lead in that view
-            recyclerAdapter.notifyItemChanged( positionPurchase);
-
-            // Update this item in Firebase
-            // Note that we are using a specific key (one child in the list)
-            DatabaseReference ref = database
-                    .getReference()
-                    .child("purchasedlist")
-                    .child(keyPurchase).child("items")
-                    .child(Integer.toString(position));
-
-            // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
-            // to maintain job leads.
-            ref.addListenerForSingleValueEvent( new ValueEventListener() {
-                @Override
-                public void onDataChange( @NonNull DataSnapshot dataSnapshot ) {
-                    dataSnapshot.getRef().setValue(item).addOnSuccessListener( new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d( DEBUG_TAG, "updated item at: " + position + "(" + item.getName() + ")" );
-                            Toast.makeText(getApplicationContext(), "Item updated for " + item.getName(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-                @Override
-                public void onCancelled( @NonNull DatabaseError databaseError ) {
-                    Log.d( DEBUG_TAG, "failed to update item at: " + position + "(" + item.getName() + ")" );
-                    Toast.makeText(getApplicationContext(), "Failed to update " + item.getName(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-        else if( action == EditItemDialogFragment.DELETE ) {
-            Log.d( DEBUG_TAG, "Deleting item at: " + position + "(" + item.getName() + ") and " +
-                    "returning it back to itemsneededlist" );
-
+    private class settleButtonClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef1 = database.getReference("itemsneededlist");
+            int positionInt = 0;
 
-            // Add item to items needed list
-            myRef1.push().setValue(item)
-                    .addOnSuccessListener( new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // Show a quick confirmation
-                            Toast.makeText(getApplicationContext(), "Item created for " + item.getName(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener( new OnFailureListener() {
-                        @Override
-                        public void onFailure( @NonNull Exception e ) {
-                            Toast.makeText( getApplicationContext(), "Failed to create a item for " + item.getName(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            for (Purchase i : purchaseList) {
+                // Remove item to cart
+                purchaseList.remove(i);
+                recyclerAdapter.notifyItemRemoved(positionInt);
 
+                DatabaseReference ref = database
+                        .getReference()
+                        .child("purchasedlist")
+                        .child(i.getKey());
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        dataSnapshot.getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(DEBUG_TAG, "deleted purchase at: " + "(" + i.getKey() + ")");
+                                //Toast.makeText(getApplicationContext(), "Item deleted for " + i.getName(),Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
 
-            // remove the deleted purchase from the list (internal list in the App)
-            //purchaseList.remove( position );
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.d(DEBUG_TAG, "failed to delete item at: (" + i.getKey() + ")");
+                        //Toast.makeText(getApplicationContext(), "Failed to delete " + i.getName(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-            // Update the recycler view to remove the deleted job lead from that view
-            recyclerAdapter.notifyItemChanged( positionPurchase );
-
-            // Delete this job lead in Firebase.
-            // Note that we are using a specific key (one child in the list)
-            DatabaseReference ref = database
-                    .getReference()
-                    .child("purchasedlist")
-                    .child(keyPurchase).child("items")
-                    .child(Integer.toString(position));
-
-            // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
-            // to maintain job leads.
-            ref.addListenerForSingleValueEvent( new ValueEventListener() {
-                @Override
-                public void onDataChange( @NonNull DataSnapshot dataSnapshot ) {
-                    dataSnapshot.getRef().removeValue().addOnSuccessListener( new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d( DEBUG_TAG, "deleted item at: " + position + "(" + item.getName() + ")" );
-                            Toast.makeText(getApplicationContext(), "Item deleted for " + item.getName(),
-                                    Toast.LENGTH_SHORT).show();                        }
-                    });
-                }
-
-                @Override
-                public void onCancelled( @NonNull DatabaseError databaseError ) {
-                    Log.d( DEBUG_TAG, "failed to delete item at: " + position + "(" + item.getName() + ")" );
-                    Toast.makeText(getApplicationContext(), "Failed to delete " + item.getName(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
+                positionInt++;
+            }
+        }
         }
 
+        // This is our own callback for a DialogFragment which edits an existing item.
+        // The edit may be an update or a deletion of this item.
+        // It is called from the EditItemDialogFragment.
+        public void updateItem(int position, Item item, int action, String keyPurchase, int positionPurchase) {
+            if (action == EditItemDialogFragment.SAVE) {
+                Log.d(DEBUG_TAG, "Updating item at: " + position + "(" + item.getName() + ")");
+
+                // Update the recycler view to show the changes in the updated job lead in that view
+                recyclerAdapter.notifyItemChanged(positionPurchase);
+
+                // Update this item in Firebase
+                // Note that we are using a specific key (one child in the list)
+                DatabaseReference ref = database
+                        .getReference()
+                        .child("purchasedlist")
+                        .child(keyPurchase).child("items")
+                        .child(Integer.toString(position));
+
+                // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
+                // to maintain job leads.
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        dataSnapshot.getRef().setValue(item).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(DEBUG_TAG, "updated item at: " + position + "(" + item.getName() + ")");
+                                Toast.makeText(getApplicationContext(), "Item updated for " + item.getName(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.d(DEBUG_TAG, "failed to update item at: " + position + "(" + item.getName() + ")");
+                        Toast.makeText(getApplicationContext(), "Failed to update " + item.getName(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else if (action == EditItemDialogFragment.DELETE) {
+                Log.d(DEBUG_TAG, "Deleting item at: " + position + "(" + item.getName() + ") and " +
+                        "returning it back to itemsneededlist");
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef1 = database.getReference("itemsneededlist");
+
+                // Add item to items needed list
+                myRef1.push().setValue(item)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // Show a quick confirmation
+                                Toast.makeText(getApplicationContext(), "Item created for " + item.getName(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getApplicationContext(), "Failed to create a item for " + item.getName(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+                // remove the deleted purchase from the list (internal list in the App)
+                //purchaseList.remove( position );
+
+                // Update the recycler view to remove the deleted job lead from that view
+                recyclerAdapter.notifyItemChanged(positionPurchase);
+
+                // Delete this job lead in Firebase.
+                // Note that we are using a specific key (one child in the list)
+                DatabaseReference ref = database
+                        .getReference()
+                        .child("purchasedlist")
+                        .child(keyPurchase).child("items")
+                        .child(Integer.toString(position));
+
+                // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
+                // to maintain job leads.
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        dataSnapshot.getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(DEBUG_TAG, "deleted item at: " + position + "(" + item.getName() + ")");
+                                Toast.makeText(getApplicationContext(), "Item deleted for " + item.getName(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.d(DEBUG_TAG, "failed to delete item at: " + position + "(" + item.getName() + ")");
+                        Toast.makeText(getApplicationContext(), "Failed to delete " + item.getName(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
 
         }
+
 }
-
 
 
 
