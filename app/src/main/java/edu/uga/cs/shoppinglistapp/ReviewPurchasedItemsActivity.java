@@ -162,6 +162,7 @@ implements EditPurchaseItemDialogFragment.EditItemDialogListener {
                             public void onSuccess(Void aVoid) {
                                 Log.d(DEBUG_TAG, "deleted purchase at: " + "(" + i.getKey() + ")");
                                 //Toast.makeText(getApplicationContext(), "Item deleted for " + i.getName(),Toast.LENGTH_SHORT).show();
+                                price.setText(Double.toString(0.0));
                             }
                         });
                     }
