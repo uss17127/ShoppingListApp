@@ -7,7 +7,7 @@ import java.util.List;
 public class Purchase {
     private String key;
     private String buyer;
-    private List<Item> items;
+    private List<Item> items = new ArrayList<Item>();
 
     public Purchase() {
         this.key = null;

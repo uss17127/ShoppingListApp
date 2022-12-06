@@ -39,7 +39,7 @@ implements EditPurchaseItemDialogFragment.EditItemDialogListener {
     private RecyclerView recyclerView1;
     private RecyclerView recyclerView2;
     private PurchaseRecyclerAdapter recyclerAdapter;
-    private double totalPrice;
+    private double totalPrice = 0;
     private TextView price;
     private Button settle;
 
@@ -106,6 +106,7 @@ implements EditPurchaseItemDialogFragment.EditItemDialogListener {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Once we have a DataSnapshot object, we need to iterate over the elements and place them on our job lead list.
                 purchaseList.clear(); // clear the current content; this is inefficient!
+                totalPrice = 0;
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Purchase purchase = postSnapshot.getValue(Purchase.class);
                     purchase.setKey(postSnapshot.getKey());
