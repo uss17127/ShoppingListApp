@@ -46,6 +46,11 @@ public class RegisterActivity extends AppCompatActivity {
         public void onClick(View view) {
             final String email = emailEditText.getText().toString();
             final String password = passworEditText.getText().toString();
+            String checkEmail = email.trim();
+
+            String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+            if (checkEmail.matches(emailPattern)) {
 
             final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
@@ -101,6 +106,12 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                         }
                     });
+                    } else {
+                        emailEditText.setText("");
+                        passworEditText.setText("");
+                Toast.makeText(RegisterActivity.this, "Illegal email format.", Toast.LENGTH_SHORT).show();
+
+                    }
         }
     }
 }
