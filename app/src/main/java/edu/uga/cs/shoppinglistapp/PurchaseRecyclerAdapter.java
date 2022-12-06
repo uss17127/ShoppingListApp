@@ -75,6 +75,7 @@ public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecycl
         for (Item i: bought) {
             total += i.getPrice();
         }
+        total = Math.round(total * 100.0) / 100.0;
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(holder.itemView.getContext());
         holder.itemsBought.setLayoutManager(layoutManager);
