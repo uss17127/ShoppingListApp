@@ -313,7 +313,7 @@ public class ReviewCartActivity
                         @Override
                         public void onSuccess(Void aVoid) {
                             // Show a quick confirmation
-                            Toast.makeText(getApplicationContext(), "Item created for " + bought.getItems(),
+                            Toast.makeText(getApplicationContext(), "Items bought!",
                                     Toast.LENGTH_SHORT).show();
                         }
                     })

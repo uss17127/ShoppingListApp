@@ -115,7 +115,11 @@ implements EditPurchaseItemDialogFragment.EditItemDialogListener {
                     Log.d(DEBUG_TAG, "ValueEventListener: key: " + postSnapshot.getKey());
                 }
                 for (Purchase x : purchaseList) {
-                    totalPrice += x.getTotal();
+                   // totalPrice += x.getTotal();
+                    totalPrice = 0;
+                    for (Item i: x.getItems()) {
+                        totalPrice += i.getPrice();
+                    }
                 }
 
                 Log.d(DEBUG_TAG, "totalPrice: " + totalPrice);
@@ -226,6 +230,7 @@ implements EditPurchaseItemDialogFragment.EditItemDialogListener {
 
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef1 = database.getReference("itemsneededlist");
+
 
                 // Add item to items needed list
                 myRef1.push().setValue(item)
