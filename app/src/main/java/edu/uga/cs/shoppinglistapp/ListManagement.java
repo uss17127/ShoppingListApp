@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+// This is the main menu of the app.
+// Here users can choose to logout, add item to list, view list,view cart list, or view purchased list.
 public class ListManagement extends AppCompatActivity {
 
     @Override

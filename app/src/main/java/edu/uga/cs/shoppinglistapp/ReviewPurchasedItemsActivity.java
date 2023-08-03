@@ -152,7 +152,7 @@ implements EditPurchaseItemDialogFragment.EditItemDialogListener {
 
             for (Purchase i : purchaseList) {
                 // Remove item to cart
-                purchaseList.remove(i);
+                //purchaseList.remove(i);
                 recyclerAdapter.notifyItemRemoved(positionInt);
 
                 DatabaseReference ref = database
@@ -181,7 +181,8 @@ implements EditPurchaseItemDialogFragment.EditItemDialogListener {
 
                 positionInt++;
             }
-        }
+                purchaseList.clear();
+            }
         }
 
         // This is our own callback for a DialogFragment which edits an existing item.

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private class SignInButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick( View v ) {
-            // This is an example of how to use the AuthUI activity for signing in to Firebase.
+            // This is how to use the AuthUI activity for signing in to Firebase.
             // Here, we are just using email/password sign in.
             List<AuthUI.IdpConfig> providers = Arrays.asList(
                     new AuthUI.IdpConfig.EmailBuilder().build()
